@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Passenger Details</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f8ff;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      max-width: 800px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .passenger-block {
+      margin-bottom: 30px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 15px;
+    }
+    .passenger-block h3 {
+      margin-bottom: 10px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #message {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Passenger Details</h2>
+    <form id="passengerForm"></form>
+    <button onclick="submitPassengerDetails()">Submit All Details</button>
+    <div id="message"></div>
+  </div>
+
+  <script>
+    // Set this in the previous page before redirecting:
+    // localStorage.setItem("numPassengers", 3);
+    const numPassengers = parseInt(localStorage.getItem("numPassengers")) || 1;
+    const form = document.getElementById("passengerForm");
+
+    // Generate dynamic input blocks for each passenger
+    for (let i = 1; i <= numPassengers; i++) {
+      const block = document.createElement("div");
+      block.classList.add("passenger-block");
+
+      block.innerHTML = `
+        <h3>Passenger ${i}</h3>
+        <label for="name${i}">Full Name:</label>
+        <input type="text" id="name${i}" required>
+
+        <label for="age${i}">Age:</label>
+        <input type="number" id="age${i}" required min="0">
+
+        <label for="dob${i}">Date of Birth:</label>
+        <input type="date" id="dob${i}" required>
+
+        <label for="phone${i}">Phone Number:</label>
+        <input type="tel" id="phone${i}" maxlength="10" required>
+
+        <label for="email${i}">Email:</label>
+        <input type="email" id="email${i}" required>
+      `;
+
+      form.appendChild(block);
+    }
+
+    function submitPassengerDetails() {
+      const passengers = [];
+
+      for (let i = 1; i <= numPassengers; i++) {
+        const name = document.getElementById(`name${i}`).value.trim();
+        const age = document.getElementById(`age${i}`).value;
+        const dob = document.getElementById(`dob${i}`).value;
+        const phone = document.getElementById(`phone${i}`).value.trim();
+        const email = document.getElementById(`email${i}`).value.trim();
+
+        // Basic validation
+        if (!name || !age || !dob || !phone || !email) {
+          document.getElementById("message").style.color = "red";
+          document.getElementById("message").innerText = `❌ Please fill out all fields for passenger ${i}.`;
+          return;
+        }
+
+        if (!/^\d{10}$/.test(phone)) {
+          document.getElementById("message").style.color = "red";
+          document.getElementById("message").innerText = `❌ Invalid phone number for passenger ${i}.`;
+          return;
+        }
+
+        passengers.push({ name, age, dob, phone, email });
+      }
+
+      // Save to localStorage
+      localStorage.setItem("passengerDetails", JSON.stringify(passengers));
+
+      document.getElementById("message").style.color = "green";
+      document.getElementById("message").innerText = "✅ All passenger details saved successfully!";
+
+      // Optional: Redirect to payment page
+      // setTimeout(() => { window.location.href = "payment.html"; }, 2000);
+    }
+    function submitPassengerDetails() {
+    //   const passengerSelect = document.getElementById("passengerSelect");
+    //   const numPassengers = parseInt(passengerSelect.value) || 1;
+
+    //   localStorage.setItem("numPassengers", numPassengers);
+
+      // Redirect to passenger details page
+      window.location.href = "payment.html";
+    }
+  </script>
+
+</body>
+</html>
